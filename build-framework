@@ -1,0 +1,38 @@
+#!/bin/sh
+
+liblist=(osgShadow osgParticle osgPresentation)
+
+index=0
+listLen=${#liblist[@]}
+
+while [ $index -lt $listLen ]
+do
+    CurrentPath=`PWD`
+    FrameworkName=${liblist[$index]}
+    HeadersPath="/Users/freeblow/Desktop/OpenSceneGraph/OpenSceneGraph-3.0.0/include/"$FrameworkName
+    CurrentVersion="3.0.0"
+    CurrentLIB="/Users/freeblow/Desktop/OpenSceneGraph/OpenSceneGraph-3.0.0/build/lib/lib"$FrameworkName".3.0.0.dylib"
+    echo $CurrentPath
+    rm $FrameworkName.framework
+    mkdir $FrameworkName.framework
+    pushd $FrameworkName.framework
+    echo `pwd`
+    mkdir Versions
+    mkdir Versions/$CurrentVersion
+    mkdir Versions/$CurrentVersion/Headers
+    cp $CurrentLIB Versions/$CurrentVersion/$FrameworkName
+    cp $HeadersPath/* Versions/$CurrentVersion/Headers
+
+    ln -sf Versions/$CurrentVersion/Headers Headers
+    ln -sf Versions/$CurrentVersion/$FrameworkName $FrameworkName
+
+    pushd Versions
+    ln -sf $CurrentVersion Current
+    popd
+    popd
+    let index++
+done
+
+
+
+
